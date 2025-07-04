@@ -433,244 +433,241 @@ const StudentDashboard: React.FC = () => {
         />
       ))}
 
-      {/* Main Content with proper top padding for fixed header */}
-      <div className="pt-16 sm:pt-18">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          {/* Tabs */}
-          <div className="mb-6 sm:mb-8">
-            <nav className="flex space-x-6 sm:space-x-8 overflow-x-auto">
-              <button
-                onClick={() => setActiveTab('menu')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
-                  activeTab === 'menu'
-                    ? 'border-cosmic-500 text-cosmic-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-400'
-                }`}
-              >
-                Menu
-              </button>
-              <button
-                onClick={() => setActiveTab('orders')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
-                  activeTab === 'orders'
-                    ? 'border-cosmic-500 text-cosmic-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-400'
-                }`}
-              >
-                Your Orders
-              </button>
-            </nav>
-          </div>
-
-          {/* Menu Tab */}
-          {activeTab === 'menu' && (
-            <>
-              {/* Search and Filter */}
-              <div className="mb-6 sm:mb-8 flex flex-col sm:flex-row gap-4">
-                <div className="relative flex-1">
-                  <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                  <input
-                    type="text"
-                    placeholder="Search for delicacies..."
-                    value={searchTerm}
-                    onChange={(e) => setSearchTerm(e.target.value)}
-                    className="w-full pl-10 pr-4 py-3 glass-input rounded-lg focus:ring-2 focus:ring-cosmic-500 focus:border-transparent"
-                  />
-                </div>
-                <div className="relative">
-                  <Filter className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
-                  <select
-                    value={selectedCategory}
-                    onChange={(e) => setSelectedCategory(e.target.value)}
-                    className="pl-10 pr-8 py-3 glass-input rounded-lg focus:ring-2 focus:ring-cosmic-500 focus:border-transparent appearance-none min-w-[200px] w-full sm:w-auto"
-                  >
-                    {categories.map(category => (
-                      <option key={category} value={category} className="bg-black text-white">
-                        {category === 'all' ? 'All Categories' : category.charAt(0).toUpperCase() + category.slice(1)}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-              </div>
-
-              {/* Menu Items */}
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-                {filteredItems.map((item) => {
-                  const isOutOfStock = item.quantity_available <= 0;
-                  const canAddToCart = item.quantity_available > 0;
-                  
-                  return (
-                    <div key={item.id} className={`glass-card rounded-xl overflow-hidden hover-lift transition-all duration-300 flex flex-col ${isOutOfStock ? 'opacity-60' : ''}`}>
-                      <div className="relative">
-                        <img
-                          src={item.image_url}
-                          alt={item.name}
-                          className="w-full h-40 sm:h-48 object-cover"
-                        />
-                        <div className="absolute top-2 right-2 glass-morphism px-2 py-1 rounded-lg flex items-center border border-white/20">
-                          <Star className="w-4 h-4 text-yellow-400 fill-current" />
-                          <span className="ml-1 text-sm font-medium text-white">{item.rating}</span>
-                        </div>
-                        {isOutOfStock && (
-                          <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
-                            <div className="glass-morphism px-4 py-2 rounded-lg border border-red-500/30">
-                              <span className="text-red-400 font-semibold text-sm">OUT OF STOCK</span>
-                            </div>
-                          </div>
-                        )}
-                      </div>
-                      
-                      {/* Card Content - Flex grow to push bottom content down */}
-                      <div className="p-4 sm:p-6 flex flex-col flex-grow">
-                        <div className="flex justify-between items-start mb-2">
-                          <h3 className="text-lg sm:text-xl font-semibold text-white line-clamp-2">{item.name}</h3>
-                          <span className="text-xl sm:text-2xl font-bold cosmic-text ml-2 flex-shrink-0">₹{item.price}</span>
-                        </div>
-                        <p className="text-gray-400 mb-4 flex-grow text-sm sm:text-base line-clamp-3">{item.description}</p>
-                        
-                        {/* Bottom section - Always at bottom */}
-                        <div className="mt-auto">
-                          <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
-                            <span>Serves: {item.serves}</span>
-                            <span className={`font-medium ${isOutOfStock ? 'text-red-400' : 'text-green-400'}`}>
-                              Available: {item.quantity_available}
-                            </span>
-                          </div>
-                          <div className="flex items-center justify-between">
-                            <span className="text-xs sm:text-sm font-medium text-cosmic-400 truncate mr-2">{item.canteen_name}</span>
-                            <button
-                              onClick={() => addToCart(item)}
-                              disabled={!canAddToCart || addingToCart === item.id}
-                              className={`flex items-center space-x-2 ios-button text-white px-3 sm:px-4 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm flex-shrink-0 ${
-                                canAddToCart ? 'cosmic-glow' : ''
-                              }`}
-                            >
-                              <Plus className="w-4 h-4" />
-                              <span>
-                                {addingToCart === item.id ? 'Adding...' : 
-                                 isOutOfStock ? 'Out of Stock' : 
-                                 'Add'}
-                              </span>
-                            </button>
-                          </div>
-                        </div>
-                      </div>
-                    </div>
-                  );
-                })}
-              </div>
-
-              {filteredItems.length === 0 && (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 glass-morphism rounded-full flex items-center justify-center mx-auto mb-4 border border-white/20">
-                    <Search className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <h3 className="text-lg font-medium text-white mb-2">No delicacies found</h3>
-                  <p className="text-gray-400">Try adjusting your search or filter criteria</p>
-                </div>
-              )}
-            </>
-          )}
-
-          {/* Orders Tab */}
-          {activeTab === 'orders' && (
-            <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <h2 className="text-xl sm:text-2xl font-bold text-white">Your Orders</h2>
-                <div className="glass-morphism px-4 py-2 rounded-lg border border-white/20">
-                  <span className="text-sm text-gray-400">Total Orders: </span>
-                  <span className="font-semibold text-white">{orders.length}</span>
-                </div>
-              </div>
-
-              {ordersLoading ? (
-                <div className="flex items-center justify-center py-12">
-                  <div className="w-8 h-8 glass-spinner rounded-full animate-spin"></div>
-                </div>
-              ) : orders.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 glass-morphism rounded-full flex items-center justify-center mx-auto mb-4 border border-white/20">
-                    <Package className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <h3 className="text-lg font-medium text-white mb-2">No orders yet</h3>
-                  <p className="text-gray-400 mb-6">Your orders will appear here</p>
-                  <button
-                    onClick={() => setActiveTab('menu')}
-                    className="ios-button text-white px-6 py-2 rounded-lg transition-all duration-200 cosmic-glow"
-                  >
-                    Browse Menu
-                  </button>
-                </div>
-              ) : (
-                <div className="grid gap-4 sm:gap-6">
-                  {orders.map((order) => (
-                    <div key={order.id} className="glass-morphism-strong rounded-xl p-4 sm:p-6">
-                      <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-4">
-                        <div>
-                          <h3 className="text-lg font-semibold text-white">
-                            Order #{order.id.slice(0, 8)}
-                          </h3>
-                          <p className="text-sm text-gray-400">
-                            {new Date(order.created_at).toLocaleDateString()} at{' '}
-                            {new Date(order.created_at).toLocaleTimeString()}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-xl sm:text-2xl font-bold cosmic-text">₹{order.total_amount}</p>
-                          <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                            {getStatusIcon(order.status)}
-                            <span className="ml-1 capitalize">{order.status}</span>
-                          </div>
-                        </div>
-                      </div>
-
-                      <div className="mb-4">
-                        <h4 className="font-medium text-white mb-3">Items:</h4>
-                        <div className="space-y-3">
-                          {order.order_items.map((item) => (
-                            <div key={item.id} className="flex items-center space-x-3 sm:space-x-4 p-3 glass-morphism rounded-lg border border-white/10">
-                              <img
-                                src={item.menu_item.image_url}
-                                alt={item.menu_item.name}
-                                className="w-10 h-10 sm:w-12 sm:h-12 object-cover rounded-lg flex-shrink-0"
-                              />
-                              <div className="flex-1 min-w-0">
-                                <h5 className="font-medium text-white text-sm sm:text-base truncate">{item.menu_item.name}</h5>
-                                <p className="text-xs sm:text-sm text-cosmic-400 truncate">{item.menu_item.canteen_name}</p>
-                              </div>
-                              <div className="text-right flex-shrink-0">
-                                <p className="font-medium text-white text-sm sm:text-base">x{item.quantity}</p>
-                                <p className="text-xs sm:text-sm text-gray-400">₹{item.price * item.quantity}</p>
-                              </div>
-                            </div>
-                          ))}
-                        </div>
-                      </div>
-
-                      {order.status === 'ready' && (
-                        <div className="toast-success rounded-lg p-4">
-                          <div className="flex items-center">
-                            <CheckCircle className="w-5 h-5 text-green-400 mr-2 flex-shrink-0" />
-                            <span className="text-green-300 font-medium text-sm sm:text-base">Your order is ready for pickup!</span>
-                          </div>
-                        </div>
-                      )}
-
-                      {order.status === 'processing' && (
-                        <div className="status-processing rounded-lg p-4">
-                          <div className="flex items-center">
-                            <Package className="w-5 h-5 text-cosmic-400 mr-2 flex-shrink-0" />
-                            <span className="text-cosmic-300 font-medium text-sm sm:text-base">Your order is being prepared by our chefs</span>
-                          </div>
-                        </div>
-                      )}
-                    </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Tabs */}
+        <div className="mb-8">
+          <nav className="flex space-x-8">
+            <button
+              onClick={() => setActiveTab('menu')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === 'menu'
+                  ? 'border-cosmic-500 text-cosmic-400'
+                  : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-400'
+              }`}
+            >
+              Menu
+            </button>
+            <button
+              onClick={() => setActiveTab('orders')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === 'orders'
+                  ? 'border-cosmic-500 text-cosmic-400'
+                  : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-400'
+              }`}
+            >
+              Your Orders
+            </button>
+          </nav>
         </div>
+
+        {/* Menu Tab */}
+        {activeTab === 'menu' && (
+          <>
+            {/* Search and Filter */}
+            <div className="mb-8 flex flex-col sm:flex-row gap-4">
+              <div className="relative flex-1">
+                <Search className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                <input
+                  type="text"
+                  placeholder="Search for delicacies..."
+                  value={searchTerm}
+                  onChange={(e) => setSearchTerm(e.target.value)}
+                  className="w-full pl-10 pr-4 py-3 glass-input rounded-lg focus:ring-2 focus:ring-cosmic-500 focus:border-transparent"
+                />
+              </div>
+              <div className="relative">
+                <Filter className="absolute left-3 top-3 h-5 w-5 text-gray-400" />
+                <select
+                  value={selectedCategory}
+                  onChange={(e) => setSelectedCategory(e.target.value)}
+                  className="pl-10 pr-8 py-3 glass-input rounded-lg focus:ring-2 focus:ring-cosmic-500 focus:border-transparent appearance-none min-w-[200px]"
+                >
+                  {categories.map(category => (
+                    <option key={category} value={category} className="bg-black text-white">
+                      {category === 'all' ? 'All Categories' : category.charAt(0).toUpperCase() + category.slice(1)}
+                    </option>
+                  ))}
+                </select>
+              </div>
+            </div>
+
+            {/* Menu Items */}
+            <div className="responsive-grid">
+              {filteredItems.map((item) => {
+                const isOutOfStock = item.quantity_available <= 0;
+                const canAddToCart = item.quantity_available > 0;
+                
+                return (
+                  <div key={item.id} className={`glass-card rounded-xl overflow-hidden hover-lift transition-all duration-300 flex flex-col ${isOutOfStock ? 'opacity-60' : ''}`}>
+                    <div className="relative">
+                      <img
+                        src={item.image_url}
+                        alt={item.name}
+                        className="w-full h-48 object-cover"
+                      />
+                      <div className="absolute top-2 right-2 glass-morphism px-2 py-1 rounded-lg flex items-center border border-white/20">
+                        <Star className="w-4 h-4 text-yellow-400 fill-current" />
+                        <span className="ml-1 text-sm font-medium text-white">{item.rating}</span>
+                      </div>
+                      {isOutOfStock && (
+                        <div className="absolute inset-0 bg-black/60 flex items-center justify-center">
+                          <div className="glass-morphism px-4 py-2 rounded-lg border border-red-500/30">
+                            <span className="text-red-400 font-semibold text-sm">OUT OF STOCK</span>
+                          </div>
+                        </div>
+                      )}
+                    </div>
+                    
+                    {/* Card Content - Flex grow to push bottom content down */}
+                    <div className="p-6 flex flex-col flex-grow">
+                      <div className="flex justify-between items-start mb-2">
+                        <h3 className="text-xl font-semibold text-white">{item.name}</h3>
+                        <span className="text-2xl font-bold cosmic-text">₹{item.price}</span>
+                      </div>
+                      <p className="text-gray-400 mb-4 flex-grow">{item.description}</p>
+                      
+                      {/* Bottom section - Always at bottom */}
+                      <div className="mt-auto">
+                        <div className="flex items-center justify-between text-sm text-gray-500 mb-3">
+                          <span>Serves: {item.serves}</span>
+                          <span className={`font-medium ${isOutOfStock ? 'text-red-400' : 'text-green-400'}`}>
+                            Available: {item.quantity_available}
+                          </span>
+                        </div>
+                        <div className="flex items-center justify-between">
+                          <span className="text-sm font-medium text-cosmic-400">{item.canteen_name}</span>
+                          <button
+                            onClick={() => addToCart(item)}
+                            disabled={!canAddToCart || addingToCart === item.id}
+                            className={`flex items-center space-x-2 ios-button text-white px-4 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed ${
+                              canAddToCart ? 'cosmic-glow' : ''
+                            }`}
+                          >
+                            <Plus className="w-4 h-4" />
+                            <span>
+                              {addingToCart === item.id ? 'Adding...' : 
+                               isOutOfStock ? 'Out of Stock' : 
+                               'Add to Cart'}
+                            </span>
+                          </button>
+                        </div>
+                      </div>
+                    </div>
+                  </div>
+                );
+              })}
+            </div>
+
+            {filteredItems.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 glass-morphism rounded-full flex items-center justify-center mx-auto mb-4 border border-white/20">
+                  <Search className="w-8 h-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-medium text-white mb-2">No delicacies found</h3>
+                <p className="text-gray-400">Try adjusting your search or filter criteria</p>
+              </div>
+            )}
+          </>
+        )}
+
+        {/* Orders Tab */}
+        {activeTab === 'orders' && (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h2 className="text-2xl font-bold text-white">Your Orders</h2>
+              <div className="glass-morphism px-4 py-2 rounded-lg border border-white/20">
+                <span className="text-sm text-gray-400">Total Orders: </span>
+                <span className="font-semibold text-white">{orders.length}</span>
+              </div>
+            </div>
+
+            {ordersLoading ? (
+              <div className="flex items-center justify-center py-12">
+                <div className="w-8 h-8 glass-spinner rounded-full animate-spin"></div>
+              </div>
+            ) : orders.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 glass-morphism rounded-full flex items-center justify-center mx-auto mb-4 border border-white/20">
+                  <Package className="w-8 h-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-medium text-white mb-2">No orders yet</h3>
+                <p className="text-gray-400 mb-6">Your orders will appear here</p>
+                <button
+                  onClick={() => setActiveTab('menu')}
+                  className="ios-button text-white px-6 py-2 rounded-lg transition-all duration-200 cosmic-glow"
+                >
+                  Browse Menu
+                </button>
+              </div>
+            ) : (
+              <div className="grid gap-6">
+                {orders.map((order) => (
+                  <div key={order.id} className="glass-morphism-strong rounded-xl p-6">
+                    <div className="flex flex-col sm:flex-row justify-between items-start mb-4 gap-4">
+                      <div>
+                        <h3 className="text-lg font-semibold text-white">
+                          Order #{order.id.slice(0, 8)}
+                        </h3>
+                        <p className="text-sm text-gray-400">
+                          {new Date(order.created_at).toLocaleDateString()} at{' '}
+                          {new Date(order.created_at).toLocaleTimeString()}
+                        </p>
+                      </div>
+                      <div className="text-right">
+                        <p className="text-2xl font-bold cosmic-text">₹{order.total_amount}</p>
+                        <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                          {getStatusIcon(order.status)}
+                          <span className="ml-1 capitalize">{order.status}</span>
+                        </div>
+                      </div>
+                    </div>
+
+                    <div className="mb-4">
+                      <h4 className="font-medium text-white mb-3">Items:</h4>
+                      <div className="space-y-3">
+                        {order.order_items.map((item) => (
+                          <div key={item.id} className="flex items-center space-x-4 p-3 glass-morphism rounded-lg border border-white/10">
+                            <img
+                              src={item.menu_item.image_url}
+                              alt={item.menu_item.name}
+                              className="w-12 h-12 object-cover rounded-lg"
+                            />
+                            <div className="flex-1">
+                              <h5 className="font-medium text-white">{item.menu_item.name}</h5>
+                              <p className="text-sm text-cosmic-400">{item.menu_item.canteen_name}</p>
+                            </div>
+                            <div className="text-right">
+                              <p className="font-medium text-white">x{item.quantity}</p>
+                              <p className="text-sm text-gray-400">₹{item.price * item.quantity}</p>
+                            </div>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
+
+                    {order.status === 'ready' && (
+                      <div className="toast-success rounded-lg p-4">
+                        <div className="flex items-center">
+                          <CheckCircle className="w-5 h-5 text-green-400 mr-2" />
+                          <span className="text-green-300 font-medium">Your order is ready for pickup!</span>
+                        </div>
+                      </div>
+                    )}
+
+                    {order.status === 'processing' && (
+                      <div className="status-processing rounded-lg p-4">
+                        <div className="flex items-center">
+                          <Package className="w-5 h-5 text-cosmic-400 mr-2" />
+                          <span className="text-cosmic-300 font-medium">Your order is being prepared by our chefs</span>
+                        </div>
+                      </div>
+                    )}
+                  </div>
+                ))}
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Cart Sidebar */}
@@ -680,25 +677,25 @@ const StudentDashboard: React.FC = () => {
             className="absolute inset-0 bg-black/80 backdrop-blur-sm" 
             onClick={() => setIsCartOpen(false)} 
           />
-          <div className="absolute right-0 top-0 h-full w-full max-w-sm glass-morphism-strong flex flex-col border-l border-white/20">
+          <div className="absolute right-0 top-0 h-full w-full max-w-md glass-morphism-strong flex flex-col border-l border-white/20">
             {/* Cart Header */}
-            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20">
-              <h2 className="text-lg sm:text-xl font-semibold text-white">Your Cart</h2>
+            <div className="flex items-center justify-between p-6 border-b border-white/20">
+              <h2 className="text-xl font-semibold text-white">Your Cart</h2>
               <button
                 onClick={() => setIsCartOpen(false)}
                 className="p-2 hover:bg-white/10 rounded-lg transition-colors"
               >
-                <X className="w-5 h-5 sm:w-6 sm:h-6 text-gray-400" />
+                <X className="w-6 h-6 text-gray-400" />
               </button>
             </div>
 
             {/* Cart Content */}
-            <div className="flex-1 overflow-y-auto p-4 sm:p-6 custom-scrollbar">
+            <div className="flex-1 overflow-y-auto p-6 custom-scrollbar">
               {cartItems.length === 0 ? (
                 <div className="text-center py-12">
-                  <ShoppingCart className="w-12 h-12 sm:w-16 sm:h-16 text-gray-400 mx-auto mb-4" />
-                  <h3 className="text-base sm:text-lg font-medium text-white mb-2">Your cart is empty</h3>
-                  <p className="text-gray-400 text-sm sm:text-base">Add some delicacies to get started!</p>
+                  <ShoppingCart className="w-16 h-16 text-gray-400 mx-auto mb-4" />
+                  <h3 className="text-lg font-medium text-white mb-2">Your cart is empty</h3>
+                  <p className="text-gray-400">Add some delicacies to get started!</p>
                 </div>
               ) : (
                 <div className="space-y-4">
@@ -708,36 +705,36 @@ const StudentDashboard: React.FC = () => {
                     const canIncrease = currentAvailable > 0;
                     
                     return (
-                      <div key={item.id} className="glass-morphism rounded-lg p-3 sm:p-4 border border-white/10">
-                        <div className="flex items-center space-x-3 sm:space-x-4">
+                      <div key={item.id} className="glass-morphism rounded-lg p-4 border border-white/10">
+                        <div className="flex items-center space-x-4">
                           <img
                             src={item.menu_item.image_url}
                             alt={item.menu_item.name}
-                            className="w-12 h-12 sm:w-16 sm:h-16 object-cover rounded-lg flex-shrink-0"
+                            className="w-16 h-16 object-cover rounded-lg"
                           />
-                          <div className="flex-1 min-w-0">
-                            <h4 className="font-medium text-white text-sm sm:text-base truncate">{item.menu_item.name}</h4>
-                            <p className="text-xs sm:text-sm text-cosmic-400">₹{item.menu_item.price}</p>
-                            <p className="text-xs text-gray-500 truncate">{item.menu_item.canteen_name}</p>
+                          <div className="flex-1">
+                            <h4 className="font-medium text-white">{item.menu_item.name}</h4>
+                            <p className="text-sm text-cosmic-400">₹{item.menu_item.price}</p>
+                            <p className="text-xs text-gray-500">{item.menu_item.canteen_name}</p>
                             <p className="text-xs text-gray-500">Available: {currentAvailable}</p>
                           </div>
-                          <div className="flex items-center space-x-1 sm:space-x-2 flex-shrink-0">
+                          <div className="flex items-center space-x-2">
                             <button
                               onClick={() => updateCartQuantity(item.id, item.quantity - 1)}
                               disabled={updatingCart === item.id}
-                              className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full glass-morphism hover:bg-white/10 transition-colors disabled:opacity-50 border border-white/20"
+                              className="w-8 h-8 flex items-center justify-center rounded-full glass-morphism hover:bg-white/10 transition-colors disabled:opacity-50 border border-white/20"
                             >
-                              <Minus className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                              <Minus className="w-4 h-4 text-white" />
                             </button>
-                            <span className="w-6 sm:w-8 text-center font-medium text-white text-sm sm:text-base">
+                            <span className="w-8 text-center font-medium text-white">
                               {updatingCart === item.id ? '...' : item.quantity}
                             </span>
                             <button
                               onClick={() => updateCartQuantity(item.id, item.quantity + 1)}
                               disabled={updatingCart === item.id || !canIncrease}
-                              className="w-7 h-7 sm:w-8 sm:h-8 flex items-center justify-center rounded-full glass-morphism hover:bg-white/10 transition-colors disabled:opacity-50 border border-white/20"
+                              className="w-8 h-8 flex items-center justify-center rounded-full glass-morphism hover:bg-white/10 transition-colors disabled:opacity-50 border border-white/20"
                             >
-                              <Plus className="w-3 h-3 sm:w-4 sm:h-4 text-white" />
+                              <Plus className="w-4 h-4 text-white" />
                             </button>
                           </div>
                         </div>
@@ -755,17 +752,17 @@ const StudentDashboard: React.FC = () => {
 
             {/* Cart Footer */}
             {cartItems.length > 0 && (
-              <div className="border-t border-white/20 p-4 sm:p-6">
+              <div className="border-t border-white/20 p-6">
                 <div className="flex justify-between items-center mb-4">
-                  <span className="text-base sm:text-lg font-semibold text-white">Total:</span>
-                  <span className="text-xl sm:text-2xl font-bold cosmic-text">₹{cartTotal.toFixed(2)}</span>
+                  <span className="text-lg font-semibold text-white">Total:</span>
+                  <span className="text-2xl font-bold cosmic-text">₹{cartTotal.toFixed(2)}</span>
                 </div>
                 <button
                   onClick={handleCheckout}
                   disabled={checkoutLoading}
-                  className="w-full ios-button text-white py-3 px-4 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 cosmic-glow text-sm sm:text-base"
+                  className="w-full ios-button text-white py-3 px-4 rounded-lg font-medium disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 cosmic-glow"
                 >
-                  <Shield className="w-4 h-4 sm:w-5 sm:h-5" />
+                  <Shield className="w-5 h-5" />
                   <span>{checkoutLoading ? 'Processing...' : 'Proceed to Checkout'}</span>
                 </button>
               </div>

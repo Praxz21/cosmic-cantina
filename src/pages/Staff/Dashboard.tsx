@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { Plus, Edit, Trash2, Clock, CheckCircle, AlertCircle, Package, X, DollarSign, Users, Package2, Crown, Shield, Menu } from 'lucide-react';
+import { Plus, Edit, Trash2, Clock, CheckCircle, AlertCircle, Package, X, DollarSign, Users, Package2, Crown, Shield } from 'lucide-react';
 import Header from '../../components/Layout/Header';
 import Toast from '../../components/Common/Toast';
 import { MenuItem, Order } from '../../types';
@@ -386,210 +386,207 @@ const StaffDashboard: React.FC = () => {
         />
       ))}
 
-      {/* Main Content with proper top padding for fixed header */}
-      <div className="pt-16 sm:pt-18">
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6 sm:py-8">
-          {/* Tabs */}
-          <div className="mb-6 sm:mb-8">
-            <nav className="flex space-x-6 sm:space-x-8 overflow-x-auto">
-              <button
-                onClick={() => setActiveTab('orders')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
-                  activeTab === 'orders'
-                    ? 'border-yellow-500 text-yellow-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-400'
-                }`}
-              >
-                Orders Management
-              </button>
-              <button
-                onClick={() => setActiveTab('menu')}
-                className={`py-2 px-1 border-b-2 font-medium text-sm whitespace-nowrap transition-colors ${
-                  activeTab === 'menu'
-                    ? 'border-yellow-500 text-yellow-400'
-                    : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-400'
-                }`}
-              >
-                Menu Management
-              </button>
-            </nav>
-          </div>
+      <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
+        {/* Tabs */}
+        <div className="mb-8">
+          <nav className="flex space-x-8">
+            <button
+              onClick={() => setActiveTab('orders')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === 'orders'
+                  ? 'border-yellow-500 text-yellow-400'
+                  : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-400'
+              }`}
+            >
+              Orders Management
+            </button>
+            <button
+              onClick={() => setActiveTab('menu')}
+              className={`py-2 px-1 border-b-2 font-medium text-sm transition-colors ${
+                activeTab === 'menu'
+                  ? 'border-yellow-500 text-yellow-400'
+                  : 'border-transparent text-gray-500 hover:text-gray-300 hover:border-gray-400'
+              }`}
+            >
+              Menu Management
+            </button>
+          </nav>
+        </div>
 
-          {/* Orders Tab */}
-          {activeTab === 'orders' && (
-            <div className="space-y-6 sm:space-y-8">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <h2 className="text-xl sm:text-2xl font-bold text-white">Orders for {user?.full_name}</h2>
-                <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
-                  <div className="glass-morphism px-3 sm:px-4 py-2 rounded-lg border border-white/20">
-                    <span className="text-sm text-gray-400">Total Orders: </span>
-                    <span className="font-semibold text-white">{orders.length}</span>
-                  </div>
-                  <div className="glass-morphism px-3 sm:px-4 py-2 rounded-lg border border-white/20">
-                    <span className="text-sm text-gray-400">Pending: </span>
-                    <span className="font-semibold text-yellow-400">
-                      {orders.filter(o => o.status === 'pending').length}
-                    </span>
-                  </div>
+        {/* Orders Tab */}
+        {activeTab === 'orders' && (
+          <div className="space-y-8">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h2 className="text-2xl font-bold text-white">Orders for {user?.full_name}</h2>
+              <div className="flex flex-col sm:flex-row space-y-2 sm:space-y-0 sm:space-x-4">
+                <div className="glass-morphism px-4 py-2 rounded-lg border border-white/20">
+                  <span className="text-sm text-gray-400">Total Orders: </span>
+                  <span className="font-semibold text-white">{orders.length}</span>
+                </div>
+                <div className="glass-morphism px-4 py-2 rounded-lg border border-white/20">
+                  <span className="text-sm text-gray-400">Pending: </span>
+                  <span className="font-semibold text-yellow-400">
+                    {orders.filter(o => o.status === 'pending').length}
+                  </span>
                 </div>
               </div>
+            </div>
 
-              {orders.length === 0 ? (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 glass-morphism rounded-full flex items-center justify-center mx-auto mb-4 border border-white/20">
-                    <Clock className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <h3 className="text-lg font-medium text-white mb-2">No orders yet</h3>
-                  <p className="text-gray-400">Orders for {user?.full_name} will appear here when students place them</p>
+            {orders.length === 0 ? (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 glass-morphism rounded-full flex items-center justify-center mx-auto mb-4 border border-white/20">
+                  <Clock className="w-8 h-8 text-gray-400" />
                 </div>
-              ) : (
-                <div className="grid gap-4 sm:gap-6">
-                  {orders.map((order) => (
-                    <div key={order.id} className="glass-morphism-strong rounded-xl p-4 sm:p-6">
-                      <div className="flex flex-col lg:flex-row justify-between items-start mb-4 gap-4">
-                        <div>
-                          <h4 className="text-base sm:text-lg font-semibold text-white">
-                            Order #{order.id.slice(0, 8)}
-                          </h4>
-                          <p className="text-sm font-medium text-gray-400">
-                            {formatStudentInfo(order.user)}
-                          </p>
-                          <p className="text-sm text-gray-500">
-                            {new Date(order.created_at).toLocaleDateString()} at{' '}
-                            {new Date(order.created_at).toLocaleTimeString()}
-                          </p>
-                        </div>
-                        <div className="text-right">
-                          <p className="text-lg sm:text-xl font-bold cosmic-text">₹{order.total_amount}</p>
-                          <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
-                            {getStatusIcon(order.status)}
-                            <span className="ml-1 capitalize">{order.status}</span>
-                          </div>
-                        </div>
+                <h3 className="text-lg font-medium text-white mb-2">No orders yet</h3>
+                <p className="text-gray-400">Orders for {user?.full_name} will appear here when students place them</p>
+              </div>
+            ) : (
+              <div className="grid gap-6">
+                {orders.map((order) => (
+                  <div key={order.id} className="glass-morphism-strong rounded-xl p-6">
+                    <div className="flex flex-col lg:flex-row justify-between items-start mb-4 gap-4">
+                      <div>
+                        <h4 className="text-lg font-semibold text-white">
+                          Order #{order.id.slice(0, 8)}
+                        </h4>
+                        <p className="text-sm text-gray-400 font-medium">
+                          {formatStudentInfo(order.user)}
+                        </p>
+                        <p className="text-sm text-gray-500">
+                          {new Date(order.created_at).toLocaleDateString()} at{' '}
+                          {new Date(order.created_at).toLocaleTimeString()}
+                        </p>
                       </div>
-
-                      <div className="mb-4">
-                        <h5 className="font-medium text-white mb-2">Items from {user?.full_name}:</h5>
-                        <div className="space-y-2">
-                          {order.order_items.map((item) => (
-                            <div key={item.id} className="flex justify-between items-center glass-morphism p-2 sm:p-3 rounded border border-white/10">
-                              <span className="text-gray-300 text-sm sm:text-base">
-                                {item.menu_item.name} x {item.quantity}
-                              </span>
-                              <span className="font-medium text-white text-sm sm:text-base">₹{item.price * item.quantity}</span>
-                            </div>
-                          ))}
+                      <div className="text-right">
+                        <p className="text-xl font-bold cosmic-text">₹{order.total_amount}</p>
+                        <div className={`inline-flex items-center px-2.5 py-0.5 rounded-full text-xs font-medium ${getStatusColor(order.status)}`}>
+                          {getStatusIcon(order.status)}
+                          <span className="ml-1 capitalize">{order.status}</span>
                         </div>
-                      </div>
-
-                      <div className="flex flex-wrap gap-2">
-                        <button
-                          onClick={() => updateOrderStatus(order.id, 'processing')}
-                          disabled={order.status !== 'pending' || isOrderUpdating(order.id, 'processing')}
-                          className="px-3 sm:px-4 py-2 ios-button text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm cosmic-glow"
-                        >
-                          {isOrderUpdating(order.id, 'processing') ? 'Updating...' : 'Start Processing'}
-                        </button>
-                        <button
-                          onClick={() => updateOrderStatus(order.id, 'ready')}
-                          disabled={order.status !== 'processing' || isOrderUpdating(order.id, 'ready')}
-                          className="px-3 sm:px-4 py-2 ios-button text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm"
-                          style={{ boxShadow: '0 0 20px rgba(34, 197, 94, 0.4)' }}
-                        >
-                          {isOrderUpdating(order.id, 'ready') ? 'Updating...' : 'Mark Ready'}
-                        </button>
-                        <button
-                          onClick={() => updateOrderStatus(order.id, 'completed')}
-                          disabled={order.status !== 'ready' || isOrderUpdating(order.id, 'completed')}
-                          className="px-3 sm:px-4 py-2 glass-morphism hover:bg-white/10 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm border border-white/20"
-                        >
-                          {isOrderUpdating(order.id, 'completed') ? 'Updating...' : 'Complete'}
-                        </button>
                       </div>
                     </div>
-                  ))}
-                </div>
-              )}
-            </div>
-          )}
 
-          {/* Menu Tab */}
-          {activeTab === 'menu' && (
-            <div className="space-y-6">
-              <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
-                <h2 className="text-xl sm:text-2xl font-bold text-white">Menu Items for {user?.full_name}</h2>
-                <button
-                  onClick={() => {
-                    setEditingItem(null);
-                    setIsEditModalOpen(true);
-                  }}
-                  className="flex items-center space-x-2 ios-button text-white px-4 py-2 rounded-lg transition-all duration-200"
-                  style={{ boxShadow: '0 0 20px rgba(245, 158, 11, 0.4)' }}
-                >
-                  <Plus className="w-4 h-4 sm:w-5 sm:h-5" />
-                  <span className="text-sm sm:text-base">Add New Item</span>
-                </button>
-              </div>
+                    <div className="mb-4">
+                      <h5 className="font-medium text-white mb-2">Items from {user?.full_name}:</h5>
+                      <div className="space-y-2">
+                        {order.order_items.map((item) => (
+                          <div key={item.id} className="flex justify-between items-center glass-morphism p-2 rounded border border-white/10">
+                            <span className="text-gray-300">
+                              {item.menu_item.name} x {item.quantity}
+                            </span>
+                            <span className="font-medium text-white">₹{item.price * item.quantity}</span>
+                          </div>
+                        ))}
+                      </div>
+                    </div>
 
-              <div className="grid grid-cols-1 sm:grid-cols-2 lg:grid-cols-3 xl:grid-cols-4 gap-4 sm:gap-6">
-                {menuItems.map((item) => (
-                  <div key={item.id} className="glass-card rounded-xl overflow-hidden">
-                    <img
-                      src={item.image_url}
-                      alt={item.name}
-                      className="w-full h-40 sm:h-48 object-cover"
-                    />
-                    <div className="p-4 sm:p-6">
-                      <div className="flex justify-between items-start mb-2">
-                        <h3 className="text-lg sm:text-xl font-semibold text-white line-clamp-2">{item.name}</h3>
-                        <span className="text-lg sm:text-xl font-bold cosmic-text ml-2 flex-shrink-0">₹{item.price}</span>
-                      </div>
-                      <p className="text-gray-400 mb-4 text-sm sm:text-base line-clamp-3">{item.description}</p>
-                      <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
-                        <span>Available: {item.quantity_available}</span>
-                        <span>Serves: {item.serves}</span>
-                      </div>
-                      <div className="text-sm text-gray-400 mb-4">
-                        <span className="font-medium">Canteen:</span> {item.canteen_name}
-                      </div>
-                      <div className="flex space-x-2">
-                        <button
-                          onClick={() => {
-                            setEditingItem(item);
-                            setIsEditModalOpen(true);
-                          }}
-                          className="flex-1 flex items-center justify-center space-x-2 ios-button text-white px-3 py-2 rounded-lg transition-all duration-200 cosmic-glow text-sm"
-                        >
-                          <Edit className="w-4 h-4" />
-                          <span>Edit</span>
-                        </button>
-                        <button
-                          onClick={() => handleDeleteMenuItem(item.id)}
-                          disabled={deletingMenuItem === item.id}
-                          className="flex-1 flex items-center justify-center space-x-2 ios-button text-white px-3 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed text-sm"
-                          style={{ boxShadow: '0 0 20px rgba(239, 68, 68, 0.4)' }}
-                        >
-                          <Trash2 className="w-4 h-4" />
-                          <span>{deletingMenuItem === item.id ? 'Deleting...' : 'Delete'}</span>
-                        </button>
-                      </div>
+                    <div className="flex flex-wrap gap-2">
+                      <button
+                        onClick={() => updateOrderStatus(order.id, 'processing')}
+                        disabled={order.status !== 'pending' || isOrderUpdating(order.id, 'processing')}
+                        className="px-4 py-2 ios-button text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm cosmic-glow"
+                      >
+                        {isOrderUpdating(order.id, 'processing') ? 'Updating...' : 'Start Processing'}
+                      </button>
+                      <button
+                        onClick={() => updateOrderStatus(order.id, 'ready')}
+                        disabled={order.status !== 'processing' || isOrderUpdating(order.id, 'ready')}
+                        className="px-4 py-2 ios-button text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm"
+                        style={{ boxShadow: '0 0 20px rgba(34, 197, 94, 0.4)' }}
+                      >
+                        {isOrderUpdating(order.id, 'ready') ? 'Updating...' : 'Mark Ready'}
+                      </button>
+                      <button
+                        onClick={() => updateOrderStatus(order.id, 'completed')}
+                        disabled={order.status !== 'ready' || isOrderUpdating(order.id, 'completed')}
+                        className="px-4 py-2 glass-morphism hover:bg-white/10 text-white rounded-lg disabled:opacity-50 disabled:cursor-not-allowed transition-all duration-200 text-sm border border-white/20"
+                      >
+                        {isOrderUpdating(order.id, 'completed') ? 'Updating...' : 'Complete'}
+                      </button>
                     </div>
                   </div>
                 ))}
               </div>
+            )}
+          </div>
+        )}
 
-              {menuItems.length === 0 && (
-                <div className="text-center py-12">
-                  <div className="w-16 h-16 glass-morphism rounded-full flex items-center justify-center mx-auto mb-4 border border-white/20">
-                    <Plus className="w-8 h-8 text-gray-400" />
-                  </div>
-                  <h3 className="text-lg font-medium text-white mb-2">No menu items yet</h3>
-                  <p className="text-gray-400">Add your first menu item for {user?.full_name} to get started</p>
-                </div>
-              )}
+        {/* Menu Tab */}
+        {activeTab === 'menu' && (
+          <div className="space-y-6">
+            <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4">
+              <h2 className="text-2xl font-bold text-white">Menu Items for {user?.full_name}</h2>
+              <button
+                onClick={() => {
+                  setEditingItem(null);
+                  setIsEditModalOpen(true);
+                }}
+                className="flex items-center space-x-2 ios-button text-white px-4 py-2 rounded-lg transition-all duration-200"
+                style={{ boxShadow: '0 0 20px rgba(245, 158, 11, 0.4)' }}
+              >
+                <Plus className="w-5 h-5" />
+                <span>Add New Item</span>
+              </button>
             </div>
-          )}
-        </div>
+
+            <div className="responsive-grid">
+              {menuItems.map((item) => (
+                <div key={item.id} className="glass-card rounded-xl overflow-hidden">
+                  <img
+                    src={item.image_url}
+                    alt={item.name}
+                    className="w-full h-48 object-cover"
+                  />
+                  <div className="p-6">
+                    <div className="flex justify-between items-start mb-2">
+                      <h3 className="text-xl font-semibold text-white">{item.name}</h3>
+                      <span className="text-xl font-bold cosmic-text">₹{item.price}</span>
+                    </div>
+                    <p className="text-gray-400 mb-4">{item.description}</p>
+                    <div className="flex items-center justify-between text-sm text-gray-500 mb-2">
+                      <span>Available: {item.quantity_available}</span>
+                      <span>Serves: {item.serves}</span>
+                    </div>
+                    <div className="text-sm text-gray-400 mb-4">
+                      <span className="font-medium">Canteen:</span> {item.canteen_name}
+                    </div>
+                    <div className="flex space-x-2">
+                      <button
+                        onClick={() => {
+                          setEditingItem(item);
+                          setIsEditModalOpen(true);
+                        }}
+                        className="flex-1 flex items-center justify-center space-x-2 ios-button text-white px-4 py-2 rounded-lg transition-all duration-200 cosmic-glow"
+                      >
+                        <Edit className="w-4 h-4" />
+                        <span>Edit</span>
+                      </button>
+                      <button
+                        onClick={() => handleDeleteMenuItem(item.id)}
+                        disabled={deletingMenuItem === item.id}
+                        className="flex-1 flex items-center justify-center space-x-2 ios-button text-white px-4 py-2 rounded-lg transition-all duration-200 disabled:opacity-50 disabled:cursor-not-allowed"
+                        style={{ boxShadow: '0 0 20px rgba(239, 68, 68, 0.4)' }}
+                      >
+                        <Trash2 className="w-4 h-4" />
+                        <span>{deletingMenuItem === item.id ? 'Deleting...' : 'Delete'}</span>
+                      </button>
+                    </div>
+                  </div>
+                </div>
+              ))}
+            </div>
+
+            {menuItems.length === 0 && (
+              <div className="text-center py-12">
+                <div className="w-16 h-16 glass-morphism rounded-full flex items-center justify-center mx-auto mb-4 border border-white/20">
+                  <Plus className="w-8 h-8 text-gray-400" />
+                </div>
+                <h3 className="text-lg font-medium text-white mb-2">No menu items yet</h3>
+                <p className="text-gray-400">Add your first menu item for {user?.full_name} to get started</p>
+              </div>
+            )}
+          </div>
+        )}
       </div>
 
       {/* Edit/Add Menu Item Modal */}
@@ -597,8 +594,8 @@ const StaffDashboard: React.FC = () => {
         <div className="fixed inset-0 bg-black/80 backdrop-blur-sm flex items-center justify-center z-50 p-4">
           <div className="glass-morphism-strong rounded-xl max-w-2xl w-full max-h-[90vh] overflow-y-auto custom-scrollbar">
             {/* Modal Header */}
-            <div className="flex items-center justify-between p-4 sm:p-6 border-b border-white/20">
-              <h3 className="text-lg sm:text-xl font-semibold text-white">
+            <div className="flex items-center justify-between p-6 border-b border-white/20">
+              <h3 className="text-xl font-semibold text-white">
                 {editingItem ? 'Edit Menu Item' : 'Add New Menu Item'}
               </h3>
               <button
@@ -611,7 +608,7 @@ const StaffDashboard: React.FC = () => {
             </div>
 
             {/* Modal Body */}
-            <div className="p-4 sm:p-6 space-y-4 sm:space-y-6">
+            <div className="p-6 space-y-6">
               {/* Name */}
               <div>
                 <label className="block text-sm font-medium text-gray-300 mb-2">
@@ -621,7 +618,7 @@ const StaffDashboard: React.FC = () => {
                   type="text"
                   value={editForm.name}
                   onChange={(e) => setEditForm(prev => ({ ...prev, name: e.target.value }))}
-                  className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm sm:text-base"
+                  className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                   placeholder="Enter item name"
                   disabled={savingMenuItem}
                 />
@@ -636,7 +633,7 @@ const StaffDashboard: React.FC = () => {
                   value={editForm.description}
                   onChange={(e) => setEditForm(prev => ({ ...prev, description: e.target.value }))}
                   rows={3}
-                  className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm sm:text-base"
+                  className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                   placeholder="Enter item description"
                   disabled={savingMenuItem}
                 />
@@ -655,7 +652,7 @@ const StaffDashboard: React.FC = () => {
                     min="0"
                     value={editForm.price}
                     onChange={(e) => setEditForm(prev => ({ ...prev, price: e.target.value }))}
-                    className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm sm:text-base"
+                    className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                     placeholder="0.00"
                     disabled={savingMenuItem}
                   />
@@ -671,7 +668,7 @@ const StaffDashboard: React.FC = () => {
                     min="1"
                     value={editForm.serves}
                     onChange={(e) => setEditForm(prev => ({ ...prev, serves: e.target.value }))}
-                    className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm sm:text-base"
+                    className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                     placeholder="1"
                     disabled={savingMenuItem}
                   />
@@ -687,7 +684,7 @@ const StaffDashboard: React.FC = () => {
                     min="0"
                     value={editForm.quantity_available}
                     onChange={(e) => setEditForm(prev => ({ ...prev, quantity_available: e.target.value }))}
-                    className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm sm:text-base"
+                    className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                     placeholder="0"
                     disabled={savingMenuItem}
                   />
@@ -703,7 +700,7 @@ const StaffDashboard: React.FC = () => {
                   <select
                     value={editForm.category}
                     onChange={(e) => setEditForm(prev => ({ ...prev, category: e.target.value }))}
-                    className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm sm:text-base"
+                    className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                     disabled={savingMenuItem}
                   >
                     <option value="main_course" className="bg-black text-white">Main Course</option>
@@ -721,7 +718,7 @@ const StaffDashboard: React.FC = () => {
                   <input
                     type="text"
                     value={user?.full_name || ''}
-                    className="w-full px-3 py-2 glass-input rounded-lg bg-white/5 text-gray-400 text-sm sm:text-base"
+                    className="w-full px-3 py-2 glass-input rounded-lg bg-white/5 text-gray-400"
                     disabled
                     readOnly
                   />
@@ -740,7 +737,7 @@ const StaffDashboard: React.FC = () => {
                   type="text"
                   value={editForm.image_url}
                   onChange={(e) => setEditForm(prev => ({ ...prev, image_url: e.target.value }))}
-                  className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent text-sm sm:text-base"
+                  className="w-full px-3 py-2 glass-input rounded-lg focus:ring-2 focus:ring-yellow-500 focus:border-transparent"
                   placeholder="https://example.com/image.jpg"
                   disabled={savingMenuItem}
                 />
@@ -751,18 +748,18 @@ const StaffDashboard: React.FC = () => {
             </div>
 
             {/* Modal Footer */}
-            <div className="flex space-x-4 p-4 sm:p-6 border-t border-white/20">
+            <div className="flex space-x-4 p-6 border-t border-white/20">
               <button
                 onClick={() => setIsEditModalOpen(false)}
                 disabled={savingMenuItem}
-                className="flex-1 px-4 py-2 glass-morphism border border-white/20 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-white text-sm sm:text-base"
+                className="flex-1 px-4 py-2 glass-morphism border border-white/20 rounded-lg hover:bg-white/10 transition-colors disabled:opacity-50 disabled:cursor-not-allowed text-white"
               >
                 Cancel
               </button>
               <button
                 onClick={handleSaveMenuItem}
                 disabled={savingMenuItem}
-                className="flex-1 px-4 py-2 ios-button text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2 text-sm sm:text-base"
+                className="flex-1 px-4 py-2 ios-button text-white rounded-lg transition-all disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center space-x-2"
                 style={{ boxShadow: '0 0 20px rgba(245, 158, 11, 0.4)' }}
               >
                 <Shield className="w-4 h-4" />
